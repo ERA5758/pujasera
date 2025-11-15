@@ -128,7 +128,7 @@ export function TransactionDetailsDialog({
                 
                 if (transactionToRefund.customerId !== 'N/A' && dashboardData.customers.find(c => c.id === transactionToRefund.customerId)) {
                     const customerRef = doc(db, 'stores', activeStore.id, 'customers', transactionToRefund.customerId);
-                    const pointsToRevert = transactionToRefund.pointsRedeemed - transactionToRefund.pointsEarned;
+                    const pointsToRevert = (transactionToRefund.pointsRedeemed || 0) - (transactionToRefund.pointsEarned || 0);
                     transactionRun.update(customerRef, { loyaltyPoints: increment(pointsToRevert) });
                 }
                 const feeFromPercentage = transactionToRefund.totalAmount * feeSettings.feePercentage;
@@ -189,27 +189,27 @@ export function TransactionDetailsDialog({
                    <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
                             <p className="text-muted-foreground">Subtotal</p>
-                            <p>Rp {transaction.subtotal.toLocaleString('id-ID')}</p>
+                            <p>Rp {(transaction.subtotal || 0).toLocaleString('id-ID')}</p>
                         </div>
                         <div className="flex justify-between text-destructive">
                             <p>Diskon</p>
-                            <p>-Rp {transaction.discountAmount.toLocaleString('id-ID')}</p>
+                            <p>-Rp {(transaction.discountAmount || 0).toLocaleString('id-ID')}</p>
                         </div>
-                         {transaction.taxAmount > 0 && (
+                         {(transaction.taxAmount || 0) > 0 && (
                             <div className="flex justify-between">
                                 <p className="text-muted-foreground">Pajak</p>
-                                <p>Rp {transaction.taxAmount.toLocaleString('id-ID')}</p>
+                                <p>Rp {(transaction.taxAmount || 0).toLocaleString('id-ID')}</p>
                             </div>
                         )}
-                        {transaction.serviceFeeAmount > 0 && (
+                        {(transaction.serviceFeeAmount || 0) > 0 && (
                             <div className="flex justify-between">
                                 <p className="text-muted-foreground">Biaya Layanan</p>
-                                <p>Rp {transaction.serviceFeeAmount.toLocaleString('id-ID')}</p>
+                                <p>Rp {(transaction.serviceFeeAmount || 0).toLocaleString('id-ID')}</p>
                             </div>
                         )}
                         <div className="flex justify-between font-medium">
                             <p>Total</p>
-                            <p>Rp {transaction.totalAmount.toLocaleString('id-ID')}</p>
+                            <p>Rp {(transaction.totalAmount || 0).toLocaleString('id-ID')}</p>
                         </div>
                         <div className="flex justify-between">
                             <p className="text-muted-foreground">Metode Pembayaran</p>
@@ -217,11 +217,11 @@ export function TransactionDetailsDialog({
                         </div>
                          <div className="flex justify-between">
                             <p className="text-muted-foreground">Poin Didapat</p>
-                            <p className="text-primary">+{transaction.pointsEarned} pts</p>
+                            <p className="text-primary">+{transaction.pointsEarned || 0} pts</p>
                         </div>
                          <div className="flex justify-between text-destructive">
                             <p>Poin Ditukar</p>
-                            <p>-{transaction.pointsRedeemed} pts</p>
+                            <p>-{transaction.pointsRedeemed || 0} pts</p>
                         </div>
                    </div>
                 </div>
@@ -279,7 +279,7 @@ export function TransactionDetailsDialog({
                 <div className="py-4 space-y-4">
                     <div className="text-center">
                         <p className="text-muted-foreground">Total Tagihan</p>
-                        <p className="text-3xl font-bold">Rp {transactionToPay?.totalAmount.toLocaleString('id-ID')}</p>
+                        <p className="text-3xl font-bold">Rp {(transactionToPay?.totalAmount || 0).toLocaleString('id-ID')}</p>
                     </div>
                     <Select value={paymentMethodForDialog} onValueChange={(value: 'Cash' | 'Card' | 'QRIS') => setPaymentMethodForDialog(value)}>
                         <SelectTrigger><SelectValue placeholder="Pilih Metode Pembayaran"/></SelectTrigger>
@@ -436,7 +436,7 @@ export default function Transactions({ onDetailRequest, onPrintRequest }: Transa
                               {transaction.paymentMethod === 'Belum Dibayar' && transaction.status !== 'Dibatalkan' ? 'Belum Dibayar' : transaction.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right font-mono hidden sm:table-cell">Rp {transaction.totalAmount.toLocaleString('id-ID')}</TableCell>
+                        <TableCell className="text-right font-mono hidden sm:table-cell">Rp {(transaction.totalAmount || 0).toLocaleString('id-ID')}</TableCell>
                         <TableCell className="text-right">
                           <Button aria-haspopup="true" size="icon" variant="ghost" onClick={(e) => { e.stopPropagation(); onDetailRequest(transaction); }}>
                               <MoreHorizontal className="h-4 w-4" />
