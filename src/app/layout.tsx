@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import PwaInstaller from '@/components/Pwa-installer';
 
 export const metadata: Metadata = {
-  title: 'Pujasera Chika AI',
+  title: 'PUJASERA UMKM',
   description: 'Aplikasi Kasir untuk Pujasera & Grup UMKM F&B',
   manifest: '/manifest.json',
 };
